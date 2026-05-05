@@ -6,7 +6,7 @@
   },
 
 
-  "remarks": "MITM-DomainFronting_v8",
+  "remarks": "MITM-DomainFronting_v9",
 
   "version": {
     "min": "26.2.6"
@@ -338,7 +338,7 @@
 	  },
 	  {
 	   "outboundTag": "tls-repack-fastly",
-       "domain": ["geosite:fastly", "geosite:reddit", "domain:githubassets.com", "domain:githubusercontent.com", "geosite:cnn", "domain:buzzfeed.com"],
+       "domain": ["geosite:fastly", "geosite:reddit", "geosite:cnn", "domain:buzzfeed.com", "domain:release-assets.githubusercontent.com"],
        "inboundTag": ["tls-decrypt-h211"]
 	  },
 	  {
@@ -348,7 +348,7 @@
 	  },
       {
 	   "outboundTag": "tls-repack-github-com",
-       "domain": ["domain:github.com"],
+       "domain": ["domain:gist.github.com"],
        "inboundTag": ["tls-decrypt-h211"]
 	  },
 	  {
@@ -370,7 +370,7 @@
         "outboundTag": "redirect-out-h211",
         "network": "tcp",
         "port": 443,
-        "domain": ["geosite:google", "geosite:vercel", "geosite:fastly", "geosite:reddit", "domain:githubassets.com", "domain:githubusercontent.com", "geosite:netlify", "geosite:cnn", "domain:buzzfeed.com", "domain:github.com"]
+        "domain": ["geosite:google", "geosite:vercel", "geosite:fastly", "geosite:reddit", "geosite:netlify", "geosite:cnn", "domain:buzzfeed.com", "domain:release-assets.githubusercontent.com", "domain:gist.github.com"]
       },
       {
 	   "outboundTag": "direct",
