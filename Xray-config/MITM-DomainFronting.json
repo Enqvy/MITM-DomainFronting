@@ -6,7 +6,7 @@
   },
 
 
-  "remarks": "MITM-DomainFronting_v12",
+  "remarks": "MITM-DomainFronting_v13",
 
   "version": {
     "min": "26.2.6"
@@ -33,7 +33,8 @@
 	  "fastly.redirect": "pypi.org",
 	  "amazon-cloudfront.redirect": "kubernetes.io",
       "github-com.redirect": "github.com",
-      "github-com-2.redirect": "central.github.com"
+      "github-com-2.redirect": "central.github.com",
+      "github-alive.redirect": "alive.github.com"
     },
     "servers": [
       "fakedns",
@@ -152,6 +153,28 @@
       "protocol": "direct",
       "settings": {
         "redirect": "127.0.0.1:11777"
+      }
+    },
+    {
+      "tag": "tls-repack-frommitm",
+      "protocol": "direct",
+      "streamSettings": {
+        "security": "tls",
+        "tlsSettings": {
+          "serverName": "fromMitM",
+          "verifyPeerCertByName": "fromMitM,github.com,www.github.com",
+          "alpn": ["fromMitM"],
+          "fingerprint": "chrome"
+        },
+		"sockopt": {
+          "domainStrategy": "ForceIP",
+          "happyEyeballs": {
+            "tryDelayMs": 300,
+            "prioritizeIPv6": false,
+            "interleave": 2,
+            "maxConcurrentTry": 20
+          }
+        }
       }
     },
 	{
@@ -325,6 +348,31 @@
           }
         }
       }
+    },
+    {
+      "tag": "tls-repack-github-alive",
+      "protocol": "direct",
+      "settings": {
+        "redirect": "github-alive.redirect:443"
+      },
+      "streamSettings": {
+        "security": "tls",
+        "tlsSettings": {
+          "serverName": "alive.github.com",
+          "verifyPeerCertByName": "fromMitM,alive.github.com,live.github.com,github.com,www.github.com",
+          "alpn": ["fromMitM"],
+          "fingerprint": "chrome"
+        },
+		"sockopt": {
+          "domainStrategy": "ForceIP",
+          "happyEyeballs": {
+            "tryDelayMs": 300,
+            "prioritizeIPv6": false,
+            "interleave": 2,
+            "maxConcurrentTry": 20
+          }
+        }
+      }
     }
   ],
 
@@ -350,6 +398,11 @@
       {
 	   "outboundTag": "tls-repack-googlevideo",
        "domain": ["domain:googlevideo.com"],
+       "inboundTag": ["tls-decrypt-h11"]
+	  },
+      {
+	   "outboundTag": "tls-repack-github-alive",
+       "domain": ["domain:alive.github.com", "domain:live.github.com"],
        "inboundTag": ["tls-decrypt-h11"]
 	  },
       {
@@ -379,12 +432,23 @@
 	  },
       {
 	   "outboundTag": "tls-repack-github-com-2",
-       "domain": ["domain:objects-origin.githubusercontent.com"],
+       "domain": ["domain:objects-origin.githubusercontent.com", "domain:api.individual.githubcopilot.com", "domain:glb-db52c2cf8be544.github.com", "domain:api.githubcopilot.com"],
        "inboundTag": ["tls-decrypt-h211"]
 	  },
 	  {
 	   "outboundTag": "tls-repack-fastly",
        "ip": ["geoip:fastly"],
+       "inboundTag": ["tls-decrypt-h211"]
+	  },
+      {
+	   "outboundTag": "block",
+       "ip": ["10.10.34.0/24", "2001:4188:2:600::/64"],
+       "inboundTag": ["tls-decrypt-h211", "tls-decrypt-h11"]
+	  },
+      {
+	   "outboundTag": "tls-repack-frommitm",
+       "domain": ["geosite:github"],
+       "ip": ["0.0.0.0/0", "::/0"],
        "inboundTag": ["tls-decrypt-h211"]
 	  },
       {
@@ -395,13 +459,13 @@
         "outboundTag": "redirect-out-h11",
         "network": "tcp",
         "port": 443,
-        "domain": ["domain:googlevideo.com"]
+        "domain": ["domain:googlevideo.com", "domain:alive.github.com", "domain:live.github.com"]
       },
       {
         "outboundTag": "redirect-out-h211",
         "network": "tcp",
         "port": 443,
-        "domain": ["geosite:google", "geosite:vercel", "geosite:fastly", "geosite:reddit", "geosite:netlify", "geosite:cnn", "domain:buzzfeed.com", "domain:release-assets.githubusercontent.com", "domain:private-user-images.githubusercontent.com", "domain:raw.githubusercontent.com", "domain:github.githubassets.com", "domain:avatars.githubusercontent.com", "domain:xtls.github.io", "domain:gist.github.com", "domain:objects-origin.githubusercontent.com"]
+        "domain": ["geosite:github", "geosite:google", "geosite:vercel", "geosite:fastly", "geosite:reddit", "geosite:netlify", "geosite:cnn", "domain:buzzfeed.com", "domain:release-assets.githubusercontent.com", "domain:private-user-images.githubusercontent.com", "domain:raw.githubusercontent.com", "domain:github.githubassets.com", "domain:avatars.githubusercontent.com", "domain:xtls.github.io", "domain:gist.github.com", "domain:objects-origin.githubusercontent.com", "domain:api.individual.githubcopilot.com", "domain:glb-db52c2cf8be544.github.com", "domain:api.githubcopilot.com"]
       },
       {
         "outboundTag": "block",
