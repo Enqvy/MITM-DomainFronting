@@ -6,7 +6,7 @@
   },
 
 
-  "remarks": "MITM-DomainFronting_v14",
+  "remarks": "MITM-DomainFronting_v15",
 
   "version": {
     "min": "26.2.6"
@@ -30,7 +30,7 @@
       "geosite:category-ads-all": "#3",
       "google-main-services.redirect": "www.google.com",
 	  "vercel-sites.redirect": "nextjs.org",
-	  "fastly.redirect": "pypi.org",
+	  "fastly.redirect": "www.python.org",
 	  "amazon-cloudfront.redirect": "kubernetes.io",
       "github-com.redirect": "github.com",
       "github-com-2.redirect": "central.github.com",
@@ -259,7 +259,7 @@
       "streamSettings": {
         "security": "tls",
         "tlsSettings": {
-          "serverName": "pypi.org",
+          "serverName": "www.python.org",
           "verifyPeerCertByName": "fromMitM,www.python.org,pypi.org,fastly.com,www.fastly.com,developer.fastly.com,reddit.com,githubassets.com,github.com,github.io,githubusercontent.com",
           "alpn": ["fromMitM"],
           "fingerprint": "chrome"
